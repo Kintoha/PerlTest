@@ -1,47 +1,52 @@
 [
-  {
-  "Author" : "Karl Marx",
-  "Information" : {
-        "Name" : "Capital: Critique of Political Economy",
-        "Published" : "1867",
-        "Publishing house" : "Not"
-  },
-  "ISBN" : "553-3831"
-  },
-  {
-  "Author" : "George Orwell",
-  "Information" : {
-        "Name" : "1984",
-        "Published" : "1949",
-        "Publishing house" : "Secker and Warburg"
-  },
-  "ISBN" : "5-01-002094-7"
-  },
-  {
-  "Author" : "George Orwell",
-  "Information" : {
-        "Name" : "Animal Farm",
-        "Published" : "1945",
-        "Publishing house" : "Secker and Warburg"
-  },
-  "ISBN" : "0-451-51679-6"
-  },
-  {
-  "Author" : "George Orwell",
-  "Information" : {
-        "Name" : "Animal Farm",
-        "Published" : "1939",
-        "Publishing house" : "Victor Gollancz"
-  },
-  "ISBN" : "0-000-00000-0"
-  },
-  {
-  "Author" : "Jay McGavren",
-  "Information" : {
-        "Name" : "Head First Ruby",
-        "Published" : "2015",
-        "Publishing house" : "O'Reilly Media"
-  },
-  "ISBN" : "978-5-496-02278-1"
-}
+   {
+      "new_order" : "nop",
+      "ISBN" : "553-3831",
+      "Information" : {
+         "Publishing house" : "Not",
+         "Name" : "Capital: Critique of Political Economy",
+         "Published" : "1867"
+      },
+      "Author" : "Karl Marx"
+   },
+   {
+      "new_order" : "nop",
+      "Information" : {
+         "Name" : "1984",
+         "Published" : "1949",
+         "Publishing house" : "Secker and Warburg"
+      },
+      "ISBN" : "5-01-002094-7",
+      "Author" : "George Orwell"
+   },
+   {
+      "Author" : "George Orwell",
+      "ISBN" : "0-451-51679-6",
+      "Information" : {
+         "Published" : "1945",
+         "Name" : "Animal Farm",
+         "Publishing house" : "Secker and Warburg"
+      },
+      "new_order" : "nop"
+   },
+   {
+      "Author" : "George Orwell",
+      "new_order" : "nop",
+      "Information" : {
+         "Published" : "1939",
+         "Name" : "Animal Farm",
+         "Publishing house" : "Victor Gollancz"
+      },
+      "ISBN" : "0-000-00000-0"
+   },
+   {
+      "Author" : "Jay McGavren",
+      "new_order" : "nop",
+      "Information" : {
+         "Publishing house" : "O'Reilly Media",
+         "Published" : "2015",
+         "Name" : "Head First Ruby"
+      },
+      "ISBN" : "978-5-496-02278-1"
+   }
 ]

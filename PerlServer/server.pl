@@ -67,7 +67,7 @@ sub http_respone {
 					$data_respone .= "<p> $key2 - $value2 </p>";
 				}
 			}
-			else { $data_respone .= "<p> $key1 - $value1 </p>"; }
+			elsif ( $key1 ne "new_order" ) { $data_respone .= "<p> $key1 - $value1 </p>"; }
 		}
 		$data_respone .= "<hr>";
 	}
