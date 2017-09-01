@@ -16,7 +16,7 @@ $/ = undef;
 @catalog_json = JSON::XS -> new -> utf8 -> decode(<FILEWORK>);
 close FILEWORK;
 
-# Заполняем @catalog из @catalog_json чтобы
+# Заполняем @catalog из @catalog_json чтобы избавиться от лишней вложенности
 my $i = 0;
 while ( $catalog_json[0]->[$i] ) {
 	$catalog[$i] = $catalog_json[0]->[$i];
@@ -44,7 +44,7 @@ sub process_request {
 			return sort_for_date( sort_for_author( $array_patch[2] ) );
 		}
 	}
-	elsif ($array_patch[1] eq "orders" and !$array_patch[3]) {
+	elsif ( $array_patch[1] eq "orders" and !$array_patch[3] ) {
 		print "Вывод заказов юзера \n";
 		return position_user($array_patch[2]);
 	}
@@ -58,26 +58,28 @@ sub process_request {
 }
 
 sub sort_for_author {
-	my($author) = @_;
+	my ($author) = @_;
 
-	my @new_catalog = @catalog;
-	my $size_array = @new_catalog;
-
-	for (my $i = 0; $i < $size_array; $i++){
-	#Удаление книг с другими авторами
-		if (lc( $new_catalog[$i]->{"Author"} ) ne lc($author)) { delete $new_catalog[$i]; }
+	my @new_catalog;
+	my $size_catalog = @catalog;
+	for (my $i = 0; $i < $size_catalog; $i++){
+		if ($catalog[$i]->{"Author"} eq $author) {
+			# Заполняем массив @new_catalog только книгами выбранного автора
+			push (@new_catalog, $catalog[$i]);
+		}
 	}
 	return @new_catalog;
 }
 
 sub sort_for_date {
-	my(@new_catalog) = @_;
+	my (@new_catalog) = @_;
+	# Сортируем книги по дате публикации
 	@new_catalog = sort { ( $b->{"Information"}->{"Published"} ) <=> ( $a->{"Information"}->{"Published"} ) } @new_catalog;
 	return @new_catalog;
 }
 
 sub position_user {
-	my($name_user) = @_;
+	my ($name_user) = @_;
 	my @catalog_position_user;
 	my @catalog_user_books; # Каталог для хранения книг определённого юзера
 
@@ -86,10 +88,11 @@ sub position_user {
 	@catalog_position_user_json = JSON::XS -> new -> utf8 -> decode(<FILEWORK>);
 	close FILEWORK;
 
+	# Заполняем @catalog_position_user из @catalog_position_user_json чтобы избавиться от лишней вложенности
 	my $i = 0;
 	while ( $catalog_position_user_json[0]->[$i] ) {
-	$catalog_position_user[$i] = $catalog_position_user_json[0]->[$i];
-	$i++;
+		$catalog_position_user[$i] = $catalog_position_user_json[0]->[$i];
+		$i++;
 	}
 
 	my $size_array = @catalog_position_user;
@@ -114,7 +117,7 @@ sub position_user {
 }
 
 sub save_position_user {
-	my($name_user, $isbn) = @_;
+	my ($name_user, $isbn) = @_;
 	my @catalog_position_user; # Корзина с юзерами и их заказами
 	my $found_a_book = "nop";
 
@@ -123,6 +126,7 @@ sub save_position_user {
 	@catalog_position_user_json = JSON::XS -> new -> utf8 -> decode(<FILEWORK>);
 	close FILEWORK;
 
+	# Заполняем @catalog_position_user из @catalog_position_user_json чтобы избавиться от лишней вложенности
 	my $i = 0;
 	while ( $catalog_position_user_json[0]->[$i] ) {
 	$catalog_position_user[$i] = $catalog_position_user_json[0]->[$i];
@@ -141,9 +145,10 @@ sub save_position_user {
 		}
 	}
 	foreach my $isbn_from_the_array (@array_isbns) {
+		# Если книга в каталоге с таким ISBN найдена, записываем во временную переменную значение yep
 		if ($isbn_from_the_array eq $isbn) { $found_a_book = "yep"; }
 	}
-	# Если книги в каталоге с таким ISBN нет, функция возвращает nop
+	# Если книг в каталоге с таким ISBN нет, функция возвращает nop
 	if ($found_a_book eq "nop") { return "nop"; }
 
 
@@ -170,13 +175,13 @@ sub save_position_user {
 
 # Перезаписываем каталог книг с новым значением new_order
 my $new_catalog = JSON::XS->new->pretty(1)->utf8(1)->encode(\@catalog);
-open(my $fh1, '+>', "catalog.json") or die "Не удалось открыть catalog.json - $!";
+open( my $fh1, '+>', "catalog.json" ) or die "Не удалось открыть catalog.json - $!\n";
 print $fh1 $new_catalog;
 close $fh1;
 
 # Перезаписываем каталог заказов пользователей, добавив в него новый заказ юзеру
 my $new_catalog_position_user = JSON::XS->new->pretty(1)->utf8(1)->encode(\@catalog_position_user);
-open(my $fh2, '+>', "users_position.json") or die "Не удалось открыть users_position.json - $!";
+open( my $fh2, '+>', "users_position.json" ) or die "Не удалось открыть users_position.json - $!\n";
 print $fh2 $new_catalog_position_user;
 close $fh2;
 
