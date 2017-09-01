@@ -1,22 +1,22 @@
 package NewBackend;
 use JSON::XS;
 use JSON;
+
 require Exporter;
 @ISA = qw(Exporter);
 @EXPORT=qw(process_request);
-my @catalog_json; # Каталог, заполненный из файла catalog.json
-my @catalog; # Структурированный каталог
+
+my @catalog_json; # Каталог, заполняемый из файла catalog.json
+my @catalog; # Структурированный каталог, получаемый из @catalog_json
 my @catalog_position_user_json; # Каталог с пользователями и их заказами
 
 open FILEWORK, "<", "catalog.json" or die "Ошибка открытия файла catalog.json: $!\n";
-# Если да, установить $/ значение undef
 $/ = undef;
-# Объявить переменную для хранения
-# декодированных данных из файла JSON
+# Декодируем каталог из JSON файла
 @catalog_json = JSON::XS -> new -> utf8 -> decode(<FILEWORK>);
-# Закрыть файловый дексриптор
 close FILEWORK;
 
+# Заполняем @catalog из @catalog_json чтобы
 my $i = 0;
 while ( $catalog_json[0]->[$i] ) {
 	$catalog[$i] = $catalog_json[0]->[$i];

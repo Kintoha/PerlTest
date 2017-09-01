@@ -30,7 +30,8 @@ while ( my $socket = $server->accept ) {
 
         # Передаём в process_request url, после чего, полученный ответ подготавливаем к выводу функцией http_respone
         my @data = process_request($url);
-        if (@data) { $socket->print( http_respone(@data) ); }
+        if ($data[0] eq "yep" or $data[0] eq "nop") {$socket->print("<html>". $data[0]. "</html>");}
+        elsif (@data) { $socket->print( http_respone(@data) ); }
         else { $socket->print( not_found() ); }
 
     	$socket->close;
@@ -50,7 +51,7 @@ RESPONSE
 }
 
 sub not_found {
-	return "<html><h1>Данные не найдены!</h1></html>";
+	return "<html>Данные не найдены!</html>";
 }
 
 # Чтение полученного от бэкэнда каталога и подготовка его к выводу в формате HTML
