@@ -7,12 +7,8 @@ open FILEWORK, "<", "otrs_error.log" or die "Ошибка открытия фа�
 
 while (<FILEWORK>) {
 	if (/ .* Error .* Kernel::System::Ticket::TicketPermission /x) {
-		if (/ .* Aug .* 6 .* 1 [0-7] : .* : .* 2017 .* /x) {
-			$amount++;
-		}
-		elsif (/ .* Aug .* 6 .* 18:00:00 .* 2017 .* /x) {
-			$amount++;
-		}
+		if (/ .* Aug .* 6 .* 1 [0-7] : .* : .* 2017 .* /x) { $amount++; }
+		elsif (/ .* Aug .* 6 .* 18:00:00 .* 2017 .* /x) { $amount++; }
 	}
 }
 close FILEWORK;
