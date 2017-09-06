@@ -1,52 +1,52 @@
 [
    {
-      "new_order" : "nop",
-      "ISBN" : "553-3831",
       "Information" : {
          "Publishing house" : "Not",
          "Name" : "Capital: Critique of Political Economy",
          "Published" : "1867"
       },
-      "Author" : "Karl Marx"
+      "ISBN" : "553-3831",
+      "Author" : "Karl Marx",
+      "new_order" : "yep"
+   },
+   {
+      "Information" : {
+         "Published" : "1949",
+         "Publishing house" : "Secker and Warburg",
+         "Name" : "1984"
+      },
+      "Author" : "George Orwell",
+      "new_order" : "nop",
+      "ISBN" : "5-01-002094-7"
    },
    {
       "new_order" : "nop",
-      "Information" : {
-         "Name" : "1984",
-         "Published" : "1949",
-         "Publishing house" : "Secker and Warburg"
-      },
-      "ISBN" : "5-01-002094-7",
-      "Author" : "George Orwell"
-   },
-   {
       "Author" : "George Orwell",
       "ISBN" : "0-451-51679-6",
       "Information" : {
          "Published" : "1945",
-         "Name" : "Animal Farm",
-         "Publishing house" : "Secker and Warburg"
-      },
-      "new_order" : "nop"
+         "Publishing house" : "Secker and Warburg",
+         "Name" : "Animal Farm"
+      }
    },
    {
-      "Author" : "George Orwell",
-      "new_order" : "nop",
       "Information" : {
-         "Published" : "1939",
+         "Publishing house" : "Victor Gollancz",
          "Name" : "Animal Farm",
-         "Publishing house" : "Victor Gollancz"
+         "Published" : "1939"
       },
-      "ISBN" : "0-000-00000-0"
+      "ISBN" : "0-000-00000-0",
+      "new_order" : "nop",
+      "Author" : "George Orwell"
    },
    {
+      "Information" : {
+         "Name" : "Head First Ruby",
+         "Publishing house" : "O'Reilly Media",
+         "Published" : "2015"
+      },
       "Author" : "Jay McGavren",
       "new_order" : "nop",
-      "Information" : {
-         "Publishing house" : "O'Reilly Media",
-         "Published" : "2015",
-         "Name" : "Head First Ruby"
-      },
       "ISBN" : "978-5-496-02278-1"
    }
 ]

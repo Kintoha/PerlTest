@@ -1,9 +1,8 @@
 #!/usr/bin/perl -w
 use Modern::Perl;
 use NewBackend;
-use Data::Dumper;
-use HTTP::Daemon;
-use HTTP::Status;
+use IO::Socket::INET;
+use Proc::Daemon;
 
 my $server_ip;
 my $server_port;
@@ -16,35 +15,56 @@ $server_ip = "192.168.0.68";
 $server_port = "8080";
 # Хардкоде
 
-my $server = new HTTP::Daemon
-	LocalAddr => $server_ip,
-	LocalPort => $server_port;
+# Создание сервера
+my $socket = new IO::Socket::INET (
+	LocalHost => $server_ip,
+	LocalPort => $server_port,
+	Proto => 'tcp',
+	Listen => 5,
+	Reuse => 1
+);
+die "Ошибка создания сокета $!\n" unless $socket;
 
-while ( my $socket = $server->accept ) {
-    while ( my $request = $socket->get_request ) {
-        my $url = $request->url->path;
-        $url =~ s/%20/ /;
-        say $url;
-        # Передаём браузеру заголовки
-        $socket->print( http_headers() );
+while(1)
+{
+	my $client_socket = $socket->accept();
+	my $client_address = $client_socket->peerhost();
+	my $client_port = $client_socket->peerport();
 
-        # Передаём в process_request url, после чего, полученный ответ подготавливаем к выводу функцией http_respone
-        my @data = process_request($url);
+	my $client_data;
+	my $lgdata;
+	my @array_client_data;
+	my $url;
 
-        if (@data) {
-        	if ($data[0] eq "yep" or $data[0] eq "nop") {$socket->print("<html>". $data[0]. "</html>");}
-        	else { $socket->print( http_respone(@data) ); }
-    	}
-        else { $socket->print( not_found() ); }
+	$client_socket->recv($client_data, 1024);
+	$lgdata = length($client_data);
 
-    	$socket->close;
-    	undef( $socket );
-    }
+	@array_client_data = split /\s/, $client_data;
+	$url = $array_client_data[1];
+	$url =~ s/%20/ /;
+
+	# Передаём браузеру базовые заголовки
+	$client_socket->send(http_headers());
+
+	if ($url ne '/favicon.ico' and $url ne '/robots.txt') {
+
+		my @data = process_request($url);
+		if (@data) {
+			if ($data[0] eq "yep" or $data[0] eq "nop") {$client_socket->send("<html>". $data[0]. "</html>");}
+			else { $client_socket->send( http_respone(@data) ); }
+		}
+		else { $client_socket->send( not_found() ); }
+
+		shutdown($client_socket, 1);
+	}
+
+	shutdown($client_socket, 1);
 }
-  
+$socket->close();
+
 # Формируем HTTP заголовки
 sub http_headers { 
-    return <<RESPONSE;
+	return <<RESPONSE;
 HTTP/1.0 200 OK
 Server: PerlServer
 Content-type: text/html; charset=UTF-8

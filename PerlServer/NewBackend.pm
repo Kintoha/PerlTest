@@ -23,45 +23,90 @@ while ( $catalog_json[0]->[$i] ) {
 	$i++;
 }
 
-# Функция разбирает url и вызывает соотвествующе функции
-sub process_request {
+# Узнаём размер каталога
+my $size_catalog = @catalog;
 
+# Маршруты url, которые содержат имя функции,
+# которую нужно выбрать в зависимости от выбранного маршрута.
+# s_ это константы
+# v_ это переменные
+my @route_table = (
+	["catalog", "s_catalog"],
+	["sort_for_author", "s_catalog", "v_author"],
+	["sort_for_author_and_date", "s_catalog", "v_author", "v_date"],
+	["position_user", "s_orders", "v_name_user"],
+	["save_position_user", "s_orders", "v_name_user", "s_new", "v_isbn"]
+);
+
+# Функция разбирает url, определяет маршрут и берёт из него имя нужной функции
+sub process_request{
 	my ($url) = @_;
-    my @array_patch = split /\//, $url;
-	my $size_array_patch = @array_patch;
+	my $error;
+	my $name_func_to_run;
+	my @params_to_func;
+	my @array_path = split /\//, $url;
+	my $array_path_size = @array_path;
+	
+	my $route_table_size = @route_table;
 
-	if ( $array_patch[1] eq "catalog" ) {
-		if ( !$array_patch[2] ) {
-			print "Вывод каталога \n";
-			return @catalog;
-		}
-		elsif ( !$array_patch[3] ) {
-			print "Вывод каталога с сортировкой по автору \n";
-			return sort_for_author($array_patch[2]);
-		}
-		elsif ( $array_patch[3] eq "date_asc" ){
-			print "Вывод каталога с сортировкой по дате \n";
-			return sort_for_date( sort_for_author( $array_patch[2] ) );
+	for (my $i = 0; $i < $route_table_size; $i++){
+		$error = 0;
+		@params_to_func = ();
+		my $route_link = $route_table[$i];
+		my @tmp_array = @$route_link;
+		
+
+		my $route_size = @tmp_array;
+
+		if($route_size == $array_path_size){
+			
+			for (my $j = 1; $j < $route_size; $j++) {
+
+				my $prefix = substr($tmp_array[$j], 0, 2);
+				
+				my $route_param = $tmp_array[$j];
+				substr($route_param, 0, 2) = "";				
+
+				if($prefix eq "s_"){
+					if($route_param ne $array_path[$j]){
+						$error = 1;
+						last;
+					}
+				}
+				else{
+					push(@params_to_func, $array_path[$j]);
+				}
+			}
+
+			if(!$error){
+				$name_func_to_run = $tmp_array[0];
+				last;
+			}
 		}
 	}
-	elsif ( $array_patch[1] eq "orders" and !$array_patch[3] ) {
-		print "Вывод заказов юзера \n";
-		return position_user($array_patch[2]);
+
+	if (!$error) {
+		run_fun($name_func_to_run, @params_to_func);
 	}
-	elsif ( $array_patch[1] eq "orders" and $array_patch[3] eq "new" ) {
-		print "Добавление нового заказа \n";
-		return save_position_user( $array_patch[2], $array_patch[4] );
+	else{
+		return 0;
 	}
-    else {
-    	return 0; 
-    }
+}
+
+sub run_fun{
+	my( $fun_name2, @params ) = @_;
+	my $fun_name = \&{$fun_name2};
+	&$fun_name(@params);
+}
+
+sub catalog {
+	return @catalog;
 }
 
 sub sort_for_author {
 	my ($author) = @_;
 
 	my @new_catalog;
-	my $size_catalog = @catalog;
 	for (my $i = 0; $i < $size_catalog; $i++){
 		if ($catalog[$i]->{"Author"} eq $author) {
 			# Заполняем массив @new_catalog только книгами выбранного автора
@@ -76,6 +121,11 @@ sub sort_for_date {
 	# Сортируем книги по дате публикации
 	@new_catalog = sort { ( $b->{"Information"}->{"Published"} ) <=> ( $a->{"Information"}->{"Published"} ) } @new_catalog;
 	return @new_catalog;
+}
+
+sub sort_for_author_and_date {
+	my ($author) = @_;
+	return sort_for_date( sort_for_author( $author ) );
 }
 
 sub position_user {
@@ -100,7 +150,6 @@ sub position_user {
 		if ( lc($catalog_position_user[$i]->{"User"}) eq lc($name_user) ) {
 			my $books = $catalog_position_user[$i]->{"Books"};
 			foreach my $book (@$books) {
-				my $size_array = @catalog;
 				for ( my $i = 0; $i < $size_array; $i++ ) {
 					my $hash = $catalog[$i];
 					while( my ( $key1, $value1) = each %$hash ) {
@@ -110,8 +159,8 @@ sub position_user {
 						}
 					}
 				}
-            }
-        }
+			}
+		}
 	}
 	return @catalog_user_books;
 }
@@ -129,11 +178,9 @@ sub save_position_user {
 	# Заполняем @catalog_position_user из @catalog_position_user_json чтобы избавиться от лишней вложенности
 	my $i = 0;
 	while ( $catalog_position_user_json[0]->[$i] ) {
-	$catalog_position_user[$i] = $catalog_position_user_json[0]->[$i];
-	$i++;
+		$catalog_position_user[$i] = $catalog_position_user_json[0]->[$i];
+		$i++;
 	}
-
-	my $size_catalog = @catalog;
 
 	my @array_isbns; # Массив всех ISBN в каталоге
 	for ( my $i = 0; $i < $size_catalog; $i++ ) {
