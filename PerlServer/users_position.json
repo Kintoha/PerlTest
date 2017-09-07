@@ -1,10 +1,10 @@
 [
    {
+      "User" : "aristotel",
       "Books" : [
          "553-3831",
          "5-01-002094-7"
-      ],
-      "User" : "aristotel"
+      ]
    },
    {
       "User" : "evgeny",
@@ -14,10 +14,9 @@
       ]
    },
    {
+      "User" : "denis",
       "Books" : [
-         "553-3831",
          "553-3831"
-      ],
-      "User" : "denis"
+      ]
    }
 ]

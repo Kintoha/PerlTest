@@ -2,7 +2,16 @@
 use Modern::Perl;
 use NewBackend;
 use IO::Socket::INET;
-use Proc::Daemon;
+#use Proc::Daemon;
+use POSIX;
+
+
+# Создаём идентификатор процесса
+defined(my $pid = fork) or die "Не удалсь создать идентификатор процесса: $!";
+exit if $pid;
+POSIX::setsid or die "Не удается запустить новый процесс: $!";
+umask 0;
+
 
 my $server_ip;
 my $server_port;
@@ -39,6 +48,7 @@ while(1)
 	$client_socket->recv($client_data, 1024);
 	$lgdata = length($client_data);
 
+	# Вытаскиваем из запроса клиента url и заменяем в нём %20 на пробелы
 	@array_client_data = split /\s/, $client_data;
 	$url = $array_client_data[1];
 	$url =~ s/%20/ /;
@@ -62,7 +72,7 @@ while(1)
 }
 $socket->close();
 
-# Формируем HTTP заголовки
+# Формируем базовые HTTP заголовки
 sub http_headers { 
 	return <<RESPONSE;
 HTTP/1.0 200 OK

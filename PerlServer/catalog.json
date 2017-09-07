@@ -1,43 +1,43 @@
 [
    {
       "Information" : {
-         "Publishing house" : "Not",
+         "Published" : "1867",
          "Name" : "Capital: Critique of Political Economy",
-         "Published" : "1867"
+         "Publishing house" : "Not"
       },
       "ISBN" : "553-3831",
       "Author" : "Karl Marx",
       "new_order" : "yep"
    },
    {
+      "ISBN" : "5-01-002094-7",
       "Information" : {
-         "Published" : "1949",
          "Publishing house" : "Secker and Warburg",
-         "Name" : "1984"
+         "Name" : "1984",
+         "Published" : "1949"
       },
-      "Author" : "George Orwell",
-      "new_order" : "nop",
-      "ISBN" : "5-01-002094-7"
-   },
-   {
-      "new_order" : "nop",
-      "Author" : "George Orwell",
-      "ISBN" : "0-451-51679-6",
-      "Information" : {
-         "Published" : "1945",
-         "Publishing house" : "Secker and Warburg",
-         "Name" : "Animal Farm"
-      }
-   },
-   {
-      "Information" : {
-         "Publishing house" : "Victor Gollancz",
-         "Name" : "Animal Farm",
-         "Published" : "1939"
-      },
-      "ISBN" : "0-000-00000-0",
       "new_order" : "nop",
       "Author" : "George Orwell"
+   },
+   {
+      "Author" : "George Orwell",
+      "new_order" : "nop",
+      "Information" : {
+         "Published" : "1945",
+         "Name" : "Animal Farm",
+         "Publishing house" : "Secker and Warburg"
+      },
+      "ISBN" : "0-451-51679-6"
+   },
+   {
+      "Author" : "George Orwell",
+      "new_order" : "nop",
+      "Information" : {
+         "Published" : "1939",
+         "Publishing house" : "Victor Gollancz",
+         "Name" : "Animal Farm"
+      },
+      "ISBN" : "0-000-00000-0"
    },
    {
       "Information" : {
@@ -45,8 +45,8 @@
          "Publishing house" : "O'Reilly Media",
          "Published" : "2015"
       },
+      "ISBN" : "978-5-496-02278-1",
       "Author" : "Jay McGavren",
-      "new_order" : "nop",
-      "ISBN" : "978-5-496-02278-1"
+      "new_order" : "nop"
    }
 ]
